@@ -35,13 +35,28 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsLoading(true);
     try {
       const response = await fetch(`/api/vulnerabilities?query=${searchQuery}&page=${pagination.currentPage}&limit=${pagination.itemsPerPage}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
+      if (!data.vulnerabilities || !data.pagination) {
+        throw new Error('Invalid data structure returned from API');
+      }
       setSearchResults(data.vulnerabilities);
       setPagination(data.pagination);
     } catch (error) {
       console.error('Error fetching vulnerabilities:', error);
+      // 可以在这里设置一些默认值或错误状态
+      setSearchResults([]);
+      setPagination({
+        currentPage: 1,
+        totalPages: 1,
+        totalItems: 0,
+        itemsPerPage: 10,
+      });
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { mockVulnerabilities, Vulnerability } from '@/lib/mockData';
 
+export const dynamic = 'force-dynamic';
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -33,6 +34,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error in GET /api/vulnerabilities:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: '内部服务器错误' }, { status: 500 });
   }
 }
